@@ -6,8 +6,6 @@
 #import matplotlib.pyplot as plt
 import dill as pkl
 import os
-import sys
-
 
 
 def add_message(sender, message, chat_id):
@@ -50,57 +48,3 @@ def add_user(sender, chat_id):
     except:
         with open(file_name, 'wb') as handle:
             pkl.dump([to_append], handle, protocol=pkl.HIGHEST_PROTOCOL)
-
-"""
-def wordcloud_bot(name, chat_id):
-    # Reads 'Youtube04-Eminem.csv' file
-    file_path = "C:\\Users\\Markus\\Documents\\TelegramBotData"
-    file_name = os.path.join(file_path, str(chat_id) + ".pkl")
-    try:
-        with open(file_name, 'rb') as handle:
-            message_dict = pkl.load(handle)
-    except:
-        return "1"
-
-    if name[0] == "@":
-        name = name[1:]
-    comment_words = ''
-    stopwords = set(STOPWORDS)
-
-    # iterate through the csv file
-    for val in message_dict:
-        if val[0] == name:
-            # typecaste each val to string
-            message = str(val[1])
-
-            # split the value
-            tokens = message.split()
-
-            # Converts each token into lowercase
-            for i in range(len(tokens)):
-                tokens[i] = tokens[i].lower()
-
-            comment_words += " ".join(tokens) + " "
-
-    if comment_words == '':
-        return "0"
-
-    wordcloud = WordCloud(width=800, height=800,
-                          background_color='black',
-                          stopwords=stopwords,
-                          min_font_size=10).generate(comment_words)
-
-    # plot the WordCloud image
-    plt.figure(figsize=(8, 8), facecolor=None)
-    plt.axis("off")
-    plt.tight_layout(pad=0)
-    plt.imshow(wordcloud)
-
-    path = os.path.join(sys.path[0], "temp_wordcloud.png")
-    plt.savefig(path)
-    return path
-"""
-
-if __name__ == '__main__':
-    # wordcloud_bot()
-    pass
