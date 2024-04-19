@@ -126,7 +126,7 @@ def aktien_command(update, context):
 
 def logging(update, context):
     """Echo the user message."""
-    user = update.message.from_user
+    #user = update.message.from_user
     if user.username != "None":
         username = user.username
     else:
