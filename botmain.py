@@ -3,7 +3,7 @@ import dill as pkl
 import os
 
 from ollama import Client
-ollama_client = Client(host='http://192.168.0.9:11434')
+ollama_client = Client(host='http://192.168.0.9:11434', timeout=5)
 
 from helperfunctions import *
 from pointsystem import *
@@ -15,6 +15,8 @@ beer = u'\U0001F37A'
 geld_smiley = u'\U0001F911'
 smiley = u'\U0001F60A'
 sad_smiley = u'\U0001F641'
+
+SYSTEM_PROMPT = "You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products."
 
 # Enable points
 # Enable logging
@@ -133,13 +135,20 @@ def ask_llama_command(update, context):
       try:
         prompt = ' '.join(context.args)
         response = ollama_client.generate(model='llama3', 
-                system="You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products.",
+                system=SYSTEM_PROMPT,
                 prompt=prompt)
         update.message.reply_text(response["response"])
       except:
         update.message.reply_text("Bin ned online. " + sad_smiley)
     else:
         update.message.reply_text('Du musst mir a Frage stellen! ' + smiley)
+      
+def set_llama_command(update, context):
+    if len(context.args) != 0:
+        SYSTEM_PROMPT = ' '.join(context.args)
+        update.message.reply_text("System prompt was set to: " + SYSTEM_PROMPT)
+    else:
+        update.message.reply_text('Give a system prompt!')
 
 def logging(update, context):
     """Echo the user message."""
@@ -168,6 +177,7 @@ def main():
 
     # Llama handler
     dp.add_handler(CommandHandler("ask", ask_llama_command))
+    dp.add_handler(CommandHandler("set_llama_system", set_llama_command))
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("zeawas", zeawas))
     dp.add_handler(CommandHandler("instafollowers", instagram_command))
