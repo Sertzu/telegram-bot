@@ -123,6 +123,12 @@ def weron_command(update, context):
 def aktien_command(update, context):
     update.message.reply_text('Komm in die gruppe und verdiene mehr als 50.000€ im monat' + geld_smiley +'\nPorschen,aktien,uhren,häusern\n050 688 699 20')
 
+def ask_llama_command(update, context):
+    print(context.args)
+    if len(context.args) != 0:
+        pass
+    else:
+        update.message.reply_text('You need to ask me something!')
 
 def logging(update, context):
     """Echo the user message."""
@@ -149,6 +155,8 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
+    # Llama handler
+    dp.add_handler(CommandHandler("ask", ask_llama_command))
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("zeawas", zeawas))
     dp.add_handler(CommandHandler("instafollowers", instagram_command))
