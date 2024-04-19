@@ -2,6 +2,9 @@ import logging
 import dill as pkl
 import os
 
+from ollama import Client
+ollama_client = Client(host='http://192.168.0.9:11434')
+
 from helperfunctions import *
 from pointsystem import *
 # from instagramScraper import getFollowerHistory
