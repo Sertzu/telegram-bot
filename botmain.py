@@ -144,6 +144,7 @@ def ask_llama_command(update, context):
         update.message.reply_text('Du musst mir a Frage stellen! ' + smiley)
       
 def set_llama_command(update, context):
+    global SYSTEM_PROMPT
     if len(context.args) != 0:
         if context.args[0] == "RETRIEVE":
           update.message.reply_text("System prompt is: " + SYSTEM_PROMPT)
