@@ -13,6 +13,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 hot = u'\U0001F525'
 beer = u'\U0001F37A'
 geld_smiley = u'\U0001F911'
+smiley = u'\U0001F60A'
+sad_smiley = u'\U0001F641'
 
 # Enable points
 # Enable logging
@@ -128,13 +130,16 @@ def aktien_command(update, context):
 
 def ask_llama_command(update, context):
     if len(context.args) != 0:
+      try:
         prompt = ' '.join(context.args)
         response = ollama_client.generate(model='llama3', 
                 system="You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products.",
                 prompt=prompt)
         update.message.reply_text(response["response"])
+      except:
+        update.message.reply_text("Bin ned online. " + sad_smiley)
     else:
-        update.message.reply_text('You need to ask me something!')
+        update.message.reply_text('Du musst mir a Frage stellen! ' + smiley)
 
 def logging(update, context):
     """Echo the user message."""
