@@ -3,7 +3,7 @@ import dill as pkl
 import os
 
 from ollama import Client
-ollama_client = Client(host='http://192.168.0.9:11434', timeout=5)
+ollama_client = Client(host='http://192.168.0.9:11434', timeout=15)
 
 from helperfunctions import *
 from pointsystem import *
