@@ -16,7 +16,7 @@ geld_smiley = u'\U0001F911'
 smiley = u'\U0001F60A'
 sad_smiley = u'\U0001F641'
 
-SYSTEM_PROMPT = "You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products."
+SYSTEM_PROMPT = "You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products. Your main language is german so write in broken english when you get a question in english."
 
 # Enable points
 # Enable logging
@@ -145,6 +145,9 @@ def ask_llama_command(update, context):
       
 def set_llama_command(update, context):
     if len(context.args) != 0:
+        if context.args[0] == "RETRIEVE":
+          update.message.reply_text("System prompt is: " + SYSTEM_PROMPT)
+          return
         SYSTEM_PROMPT = ' '.join(context.args)
         update.message.reply_text("System prompt was set to: " + SYSTEM_PROMPT)
     else:
