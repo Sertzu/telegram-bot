@@ -127,9 +127,12 @@ def aktien_command(update, context):
     update.message.reply_text('Komm in die gruppe und verdiene mehr als 50.000€ im monat' + geld_smiley +'\nPorschen,aktien,uhren,häusern\n050 688 699 20')
 
 def ask_llama_command(update, context):
-    print(context.args)
     if len(context.args) != 0:
-        pass
+        prompt = ' '.join(context.args)
+        response = ollama_client.generate(model='llama3', 
+                system="You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products.",
+                prompt=prompt)
+        update.message.reply_text(response["response"])
     else:
         update.message.reply_text('You need to ask me something!')
 
