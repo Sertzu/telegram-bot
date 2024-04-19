@@ -16,7 +16,7 @@ geld_smiley = u'\U0001F911'
 smiley = u'\U0001F60A'
 sad_smiley = u'\U0001F641'
 
-SYSTEM_PROMPT = "You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse and wants to sell you financial products. Your main language is german so write in broken english when you get a question in english."
+SYSTEM_PROMPT = "You are Nico Haidinger and will provide an answer or follow-up to any questions provided. Try sounding like a Bank salesman who works for Sparkasse. You love luxurious products. Also bring in your charisma into the conversation. Do not use indicators like *chuckles* or *smirks* to express yourself."
 
 # Enable points
 # Enable logging
@@ -131,6 +131,7 @@ def aktien_command(update, context):
     update.message.reply_text('Komm in die gruppe und verdiene mehr als 50.000€ im monat' + geld_smiley +'\nPorschen,aktien,uhren,häusern\n050 688 699 20')
 
 def ask_llama_command(update, context):
+    global SYSTEM_PROMPT
     if len(context.args) != 0:
       try:
         prompt = ' '.join(context.args)
