@@ -1,7 +1,7 @@
 import logging
 import dill as pkl
 import os
-
+from database import *
 from ollama import Client
 ollama_client = Client(host='http://192.168.0.9:11434', timeout=15)
 
@@ -131,19 +131,29 @@ def aktien_command(update, context):
     update.message.reply_text('Komm in die gruppe und verdiene mehr als 50.000€ im monat' + geld_smiley +'\nPorschen,aktien,uhren,häusern\n050 688 699 20')
 
 def ask_llama_command(update, context):
-    print(update.effective_user.id)
+    user_id = update.effective_user.id
+    print(f"Caller ID: {user_id}")
+    conn = create_connection('chatbot.db')
     global SYSTEM_PROMPT
     if len(context.args) != 0:
       try:
+        retrieved_context = get_context(conn, user_id)
         prompt = ' '.join(context.args)
-        response = ollama_client.generate(model='llama3', 
-                system=SYSTEM_PROMPT,
-                prompt=prompt)
+        if retrieved_context is None:
+            response = ollama_client.generate(model='llama3', 
+                    system=SYSTEM_PROMPT,
+                    prompt=prompt)
+        else:
+            response = ollama_client.generate(model='llama3', 
+                    context=retrieved_context,
+                    prompt=prompt)
         update.message.reply_text(response["response"])
+        save_context(conn, user_id, response["context"])
       except:
         update.message.reply_text("Bin ned online. " + sad_smiley)
     else:
         update.message.reply_text('Du musst mir a Frage stellen! ' + smiley)
+    conn.close()
       
 def set_llama_command(update, context):
     global SYSTEM_PROMPT
@@ -156,15 +166,23 @@ def set_llama_command(update, context):
     else:
         update.message.reply_text('Give a system prompt!')
 
+def delete_context_command(update, context):
+    user_id = update.effective_user.id
+    print(f"Deleting user with ID: {user_id}")
+    conn = create_connection('chatbot.db')
+    delete_context(conn, user_id)
+    conn.close()
+    
 def logging(update, context):
-    """Echo the user message."""
+    """Echo the user message.
     #user = update.message.from_user
     if user.username != "None":
         username = user.username
     else:
         username = user.name
     message = update.message.text
-    add_message(username, message, update.message.chat_id)
+    add_message(username, message, update.message.chat_id)"""
+    pass
 
 
 def main():
@@ -178,11 +196,15 @@ def main():
             token = file.read()
     updater = Updater(token, use_context=True)
 
+    # Initialize Database
+    connInit = create_connection('chatbot.db')
+    create_table(connInit)
+    connInit.close()
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
     # Llama handler
-    dp.add_handler(CommandHandler("ask", ask_llama_command))
+    dp.add_handler(CommandHandler("chat", ask_llama_command))
     dp.add_handler(CommandHandler("set_llama_system", set_llama_command))
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("zeawas", zeawas))

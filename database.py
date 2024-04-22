@@ -54,3 +54,12 @@ def get_context(conn, user_id):
     except sqlite3.Error as e:
         print(e)
         return None
+
+def delete_context(conn, user_id):
+    """Delete the context for a specific user from the database."""
+    try:
+        c = conn.cursor()
+        c.execute('DELETE FROM user_context WHERE user_id = ?', (user_id,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print(e)
