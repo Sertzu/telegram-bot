@@ -131,6 +131,7 @@ def aktien_command(update, context):
     update.message.reply_text('Komm in die gruppe und verdiene mehr als 50.000€ im monat' + geld_smiley +'\nPorschen,aktien,uhren,häusern\n050 688 699 20')
 
 def ask_llama_command(update, context):
+    print(update.effective_user.id)
     global SYSTEM_PROMPT
     if len(context.args) != 0:
       try:
