@@ -206,6 +206,7 @@ def main():
     # Llama handler
     dp.add_handler(CommandHandler("chat", ask_llama_command))
     dp.add_handler(CommandHandler("set_llama_system", set_llama_command))
+    dp.add_handler(CommandHandler("reset", delete_context_command))
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("zeawas", zeawas))
     dp.add_handler(CommandHandler("instafollowers", instagram_command))
