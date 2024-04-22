@@ -172,6 +172,7 @@ def delete_context_command(update, context):
     conn = create_connection('chatbot.db')
     delete_context(conn, user_id)
     conn.close()
+    update.message.reply_text("Ich hab alles vergessen!" + sad_smiley)
     
 def logging(update, context):
     """Echo the user message.
