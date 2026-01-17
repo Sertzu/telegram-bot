@@ -28,6 +28,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+import re
+
+SPEAKER_PREFIX_RE = re.compile(
+    r'^\s*(?:@[\w]+(?:#\d+)?|[\w]+#\d+)\s*:\s*',
+    flags=re.UNICODE
+)
+
+def strip_leading_speaker_prefixes(text: str, max_strips: int = 20) -> str:
+    if not text:
+        return text
+    s = text.strip()
+    for _ in range(max_strips):
+        m = SPEAKER_PREFIX_RE.match(s)
+        if not m:
+            break
+        s = s[m.end():].lstrip()
+    return s
+
 
 def init_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -188,11 +206,11 @@ async def handle_mention(update: Update, context: ContextTypes.DEFAULT_TYPE):
             },
             timeout=30,
         )
-        resp.raise_for_status()
-        reply = resp.json()["choices"][0]["message"]["content"]
+        reply_raw = resp.json()["choices"][0]["message"]["content"]
+        reply = strip_leading_speaker_prefixes(reply_raw)
 
         sent = await update.message.reply_text(reply)
-        await store_message(sent)  # store bot reply so the model sees it next time
+        await store_message(sent)  # now stores the clean text
 
     except requests.exceptions.RequestException as e:
         logger.error(f"Error calling OpenRouter API: {e}")
