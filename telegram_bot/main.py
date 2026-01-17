@@ -184,6 +184,7 @@ async def handle_mention(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "model": MODEL_NAME,
                 "messages": messages,
                 "temperature": 0.2,
+                "reasoning": {"enabled": False},
             },
             timeout=30,
         )
