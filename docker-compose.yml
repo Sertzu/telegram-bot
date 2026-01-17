@@ -1,0 +1,17 @@
+services:
+  telegram-bot:
+    build: ./telegram_bot
+    container_name: telegram-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 telegram-bot
